@@ -13,6 +13,8 @@
 
 \section*{Sup}
 
-Hello world.
+Convolution Neural Networks have seen many applications from image generation to regression to subsampling. The primary focus on black-box type problems in which physical models fail. We hope to expand the use-cases of these CNNs into the area of models in which the physics are entirely known! (haha) The HARPS radial velocity pipeline is data analysis process that understands the physics of light and the optics of the HARPS spectrograph, such that the highest precision radial velocity is retrieved from 2d images of the stellar spectra alongside calibration and flat images. \\
+The question is 'does this physics solution exist with the space of convolution neural networks?' and 'can assumptions made with in the physical model be improved upon by analyzing the data in an entirely data-driven way?' Also, 'can subpixel changes be noticed and modeled efficiently by a CNN?' \\
+One thing that sets the problem apart from many well-known use cases of CNNs is the concentration of information with the image. Radial velocities are model by the difference between line peaks in the stellar and calibration image. That means large structure should be ignored for the smallest of differences between these positions. Indeed at $1 m/s$ precision, the pixel difference we are looking for around $1e-3$(?) pixel difference. It should be noted that although our model does not incorporate any physics, it's job is to emulate the physics of the extraction process. By using the results of the HARPS pipeline as the target of regression, it is implicitly being informed of the interior physics of the detector.
 
 \end{document}
