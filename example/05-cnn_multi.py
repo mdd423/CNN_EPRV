@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# <h1>05-CNN for Multiple chunks of data</h1>
-
-# In[8]:
-
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -207,7 +201,7 @@ if __name__ == '__main__':
                 n_batches = (i*2 + j + 1)
                 load_avg  = load_time/n_batches
                 remaining = (total - n_batches) * load_avg
-                sys.stdout.write('\r[ Loaded: {}/{} | Avg Time: {} | Remaining: {} ]'.format(\
+                sys.stdout.write('[ Loaded: {}/{} | Avg Time: {} | Remaining: {} ]'.format(\
                                                                                            n_batches,total,
                                                                                            load_avg,
                                                                                            str(datetime.timedelta(seconds=remaining))
@@ -266,8 +260,6 @@ if __name__ == '__main__':
     batch = next(valiter)
     y = model(batch['img'].to(device),batch['indices']).squeeze()
     print('batch time: ', time.time() - start_time)
-
-
     print(torch.cuda.memory_summary())
 
 
@@ -308,7 +300,7 @@ if __name__ == '__main__':
 
                     r_time = b_avg * ((len(dataloader) * n_epochs) - (i + 1 + (j * len(dataloader))))
                     sys.stdout.write(
-                            "\r[Epoch %d/%d | Batch %d/%d | TL: %f | VL: %f | BT: %s | ET: %s | RT: %s]"
+                            "[Epoch %d/%d | Batch %d/%d | TL: %f | VL: %f | BT: %s | ET: %s | RT: %s]"
                             % (
                                 epoch,
                                 n_epochs,
