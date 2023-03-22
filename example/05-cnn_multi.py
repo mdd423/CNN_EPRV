@@ -9,7 +9,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision.transforms import transforms
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 
@@ -237,6 +236,7 @@ if __name__ == '__main__':
         device = torch.device('cuda')
     else:
         device = torch.device('cpu')
+
     lr = 0.001
     b1 = 0.9
     b2 = 0.999
@@ -273,7 +273,7 @@ if __name__ == '__main__':
 
     subprocess.run(['nvidia-smi'])
 
-    n_epochs = 10
+    n_epochs = 70
     train_loss = []
     valid_loss = []
 
