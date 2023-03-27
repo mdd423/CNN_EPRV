@@ -173,4 +173,4 @@ def load_sets(dirqueue,sitename='La Silla Observatory',objname='51PEG'):
                                                                                           ))
 
 
-    return img_stack,rvs_stack,bcs_stack,tim_stack,address
+    return img_stack,rvs_stack,bcs_stack,tim_stack,ind_stack,address
