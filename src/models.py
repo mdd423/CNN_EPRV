@@ -94,8 +94,8 @@ class ND_Dataset(Dataset):
     def __getitem__(self, index):
 
         return {'img': self.type(self.img_stack[index,...]).double(),
-                'rvs': self.type(self.rvs_stack[index]).double(),
-                'indices': self.type(self.indices[index]).int()}
+                'rvs': np.double(self.rvs_stack[index]),
+                'indices': self.indices[index])}
 
 
     def __len__(self):
