@@ -5,6 +5,7 @@ import astropy.time as at
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import Dataset
 
 import datetime
 import time
@@ -82,6 +83,24 @@ class RV_Model(nn.Module):
             y2[torch.where(indices==index)[0]] = self.chunk_models[index.item()](y1.index_select(0,torch.where(indices==index)[0].to(self.device))).squeeze()
 
         return y2
+
+class ND_Dataset(Dataset):
+    def __init__(self, imgs,rvs,indices):
+        self.img_stack = imgs
+        self.rvs_stack = rvs
+        self.indices   = indices
+        self.type      = torch.Tensor
+
+    def __getitem__(self, index):
+
+        return {'img': self.type(self.img_stack[index,...]).double(),
+                'rvs': self.type(self.rvs_stack[index]).double(),
+                'indices': self.type(self.indices[index]).int()}
+
+
+    def __len__(self):
+
+        return len(self.rvs_stack)
 
 import pickle
 def save(filename,model):
