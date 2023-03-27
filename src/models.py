@@ -1,6 +1,16 @@
+import numpy as np
+import astropy.coordinates as coords
+import astropy.time as at
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+import datetime
+import time
+import glob
+import os.path as path
+import sys
 
 class DownSizeNet(nn.Module):
     def __init__(self, in_size, out_size, kernel_size = 3, stride=1, padding=1, leaky_slope=0.2):
@@ -83,15 +93,21 @@ def load(filename):
         model = pickle.load(input)
         return model
 
+def load_sets(dirqueue,sitename='La Silla Observatory',objname='51PEG'):
+    '''
+        Load all datasets of size 256,256 from directory and sub directories queued.
+        Also pulls the RV and BERV using astropy by query name, and time in file.
+        Each filename gets indexed and added to a list that can be used and dictionary.
 
-def load_sets(dirqueue):
+        Returns: imgs, rvs, bcs, time, address
+    '''
     all_directories = glob.glob(dirqueue)
     files = []
     for indiv in all_directories:
         files += glob.glob(indiv + '/*.h5')
 
-    location = coords.EarthLocation.of_site('La Silla Observatory')
-    target   = coords.SkyCoord.from_name('51PEG')
+    location = coords.EarthLocation.of_site(sitename)
+    target   = coords.SkyCoord.from_name(objname)
 
     iterations = 0
     img_stack = np.empty((0,3,256,256))
@@ -126,7 +142,7 @@ def load_sets(dirqueue):
             ind_stack = np.append(ind_stack, iterations*np.ones(bcs_stack.shape,dtype=int))
             iterations += 1
 
-            if (i % 5) == 0:
+            if (i % 3) == 0:
                 load_time = time.time() - start_time
                 n_batches = (i*2 + j + 1)
                 load_avg  = load_time/n_batches
