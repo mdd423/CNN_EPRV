@@ -95,7 +95,7 @@ class ND_Dataset(Dataset):
 
         return {'img': self.type(self.img_stack[index,...]).double(),
                 'rvs': np.double(self.rvs_stack[index]),
-                'indices': self.indices[index])}
+                'indices': self.indices[index]}
 
 
     def __len__(self):
