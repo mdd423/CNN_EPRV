@@ -83,7 +83,7 @@ if __name__ == '__main__':
     s_c  = int(np.max(ind_stack))
     # s_in = 43264
     # s_h  = 64
-    model     = src.models.RV_Model(s_c,opt.s_in,opt.s_h,device).to(device)
+    model     = src.models.RV_Model(s_c + 1,opt.s_in,opt.s_h,device).to(device)
     mse_loss  = torch.nn.MSELoss().double()
     optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 
