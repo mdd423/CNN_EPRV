@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     validloader = DataLoader(
         validdata,
-        batch_size=batch_size,
+        batch_size=opt.batch_size,
         shuffle=True,
         num_workers=n_cpu,
     )
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     start_t = time.time()
 
     # directory, tail = path.split(filename)
-    for j,epoch in enumerate(range(n_epochs)):
+    for j,epoch in enumerate(range(opt.n_epochs)):
 
         for i, batch in enumerate(dataloader):
             optimizer.zero_grad()
