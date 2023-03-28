@@ -155,10 +155,11 @@ def load_sets(dirqueue,sitename='La Silla Observatory',objname='51PEG'):
 
             img_stack = np.append(img_stack, load(imgname),axis=0)
             rvs_stack = np.append(rvs_stack, load(rvsname),axis=0)
-            bcs_stack = np.append(bcs_stack, load(bcsname),axis=0)
+            bcs_temp = load(bcsname)
+            bcs_stack = np.append(bcs_stack, bcs_temp,axis=0)
             tim_stack = np.append(tim_stack, load(timname),axis=0)
 
-            ind_stack = np.append(ind_stack, iterations*np.ones(bcs_stack.shape,dtype=int))
+            ind_stack = np.append(ind_stack, iterations*np.ones(bcs_temp.shape,dtype=int))
             iterations += 1
 
             if (i % 3) == 0:
