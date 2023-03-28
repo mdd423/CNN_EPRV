@@ -34,18 +34,32 @@ torch.manual_seed(101101)
 random.seed(101101)
 np.random.seed(101101)
 
+import argparse
+def get_parser():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--batch_size',type=int,default=64)
+    parser.add_argument('--n_epochs',type=int,default=1)
+
+    parser.add_argument('--s_in',type=int,default=43264)
+    parser.add_argument('--s_h',type=int,default=64)
+
+    parser.add_argument('--lr',type=np.double,default=0.001)
+    parser.add_argument('--b1',type=np.double,default=0.9)
+    parser.add_argument('--b2',type=np.double,default=0.999)
+
+    return parser
 
 if __name__ == '__main__':
-
+    opt  = get_parser().parse_args()
     img_stack,rvs_stack,bcs_stack,tim_stack,ind_stack,address = src.models.load_sets('/scratch/mdd423/CNN_EPRV/data/peg51_256/raw/peg51_256/*02-28*')
     dataset = src.models.ND_Dataset(img_stack,bcs_stack,ind_stack)
     testdata,validdata = torch.utils.data.random_split(dataset,[23880,1000])
 
-    batch_size = 64
     n_cpu = 2
     dataloader = DataLoader(
         testdata,
-        batch_size=batch_size,
+        batch_size=opt.batch_size,
         shuffle=True,
         num_workers=n_cpu,
     )
@@ -62,17 +76,16 @@ if __name__ == '__main__':
     else:
         device = torch.device('cpu')
 
-    lr = 0.001
-    b1 = 0.9
-    b2 = 0.999
+    # lr = 0.001
+    # b1 = 0.9
+    # b2 = 0.999
 
     s_c  = int(np.max(ind_stack))
-    s_in = 43264
-    s_h  = 64
-    s_out= 64
-    model     = src.models.RV_Model(s_c,s_in,s_h,device).to(device)
+    # s_in = 43264
+    # s_h  = 64
+    model     = src.models.RV_Model(s_c,opt.s_in,opt.s_h,device).to(device)
     mse_loss  = torch.nn.MSELoss().double()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(b1, b2))
+    optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
 
     thing = 0
     for parameter in model.chunk_models.parameters():
@@ -81,9 +94,9 @@ if __name__ == '__main__':
     thing2 = 0
     for parameter in model.feature_model.parameters():
         thing2 += np.product(parameter.shape)
-    print('dense',thing/165)
+    print('dense',thing/s_c)
     print('conv   ' ,thing2)
-    print('dcr', thing/165/thing2)
+    print('dcr', thing/s_c/thing2)
 
 
     valiter = itertools.cycle(validloader)
@@ -96,7 +109,7 @@ if __name__ == '__main__':
 
     subprocess.run(['nvidia-smi'])
 
-    n_epochs = 20
+    n_epochs = opt.n_epochs
     train_loss = []
     valid_loss = []
 
@@ -106,7 +119,7 @@ if __name__ == '__main__':
 
     start_t = time.time()
 
-    directory, tail = path.split(filename)
+    # directory, tail = path.split(filename)
     for j,epoch in enumerate(range(n_epochs)):
 
         for i, batch in enumerate(dataloader):
@@ -151,7 +164,7 @@ if __name__ == '__main__':
         valid_loss.append(vloss.item())
         if (j % 1) == 0:
             # Saving checkpoint every 10 epoches
-            modelpath = '/scratch/mdd423/CNN_EPRV/models/rv_model_multi_{}_{}_{}_bcs.model'.format(tail[:-3],j,n_epochs)
+            modelpath = '/scratch/mdd423/CNN_EPRV/models/rv_model_multi_{}_{}_bcs.model'.format(j,n_epochs)
             torch.save(model.state_dict(), modelpath)
         e_time = time.time() - start_t
         e_avg  = e_time/(j + 1)
