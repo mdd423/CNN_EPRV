@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
                     r_time = b_avg * ((len(dataloader) * n_epochs) - (i + 1 + (j * len(dataloader))))
                     sys.stdout.write(
-                            "[Epoch %d/%d | Batch %d/%d | TL: %f | VL: %f | BT: %s | ET: %s | RT: %s]"
+                            "\n[Epoch %d/%d | Batch %d/%d | TL: %f | VL: %f | BT: %s | ET: %s | RT: %s]"
                             % (
                                 epoch,
                                 n_epochs,
