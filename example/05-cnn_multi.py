@@ -171,11 +171,11 @@ if __name__ == '__main__':
     train_loss = np.array(train_loss)
     valid_loss = np.array(valid_loss)
 
-
-    modelpath = '/scratch/mdd423/CNN_EPRV/models/rv_model_multi_{}_{}_bcs.model'.format(j,n_epochs)
+    dirname = '/scratch/mdd423/CNN_EPRV/models'
+    modelpath = path.join(dirname,'rv_model_multi_{}_{}_bcs.mdl'.format(j,n_epochs))
     torch.save(model.state_dict(), modelpath)
 
-    tlname = path.join(dir_name, tailname + '_multi_tl_bcs.nda')
-    vlname = path.join(dir_name, tailname + '_multi_vl_bcs.nda')
+    tlname = path.join(dirname, 'loss_multi_tl_bcs')
+    vlname = path.join(dirname, 'loss_multi_vl_bcs')
     np.save(tlname,train_loss)
     np.save(vlname,valid_loss)
