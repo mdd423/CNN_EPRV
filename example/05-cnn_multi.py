@@ -113,6 +113,8 @@ if __name__ == '__main__':
     train_loss = []
     valid_loss = []
 
+    chunkloss = np.zeros((0,s_c))
+
     valiter = itertools.cycle(validloader)
     b_avg = 0.0
     e_avg = 0.0
@@ -142,6 +144,10 @@ if __name__ == '__main__':
 
                     vloss = mse_loss(y,valbatch['rvs'].to(device).double())
 
+                    chunk_temp = np.zeros(s_c)
+                    chunk_temp[valbatch['indices'].to('cpu')] = np.sqrt((y - valbatch['rvs'].to('cpu').double())**2)
+                    chunkloss  = np.concatenate((chunkloss,chunk_temp[None,...]),axis=0)
+
                     r_time = b_avg * ((len(dataloader) * n_epochs) - (i + 1 + (j * len(dataloader))))
                     sys.stdout.write(
                             "\n[Epoch %d/%d | Batch %d/%d | TL: %f | VL: %f | BT: %s | ET: %s | RT: %s]"
@@ -168,6 +174,7 @@ if __name__ == '__main__':
             torch.save(model.state_dict(), modelpath)
         e_time = time.time() - start_t
         e_avg  = e_time/(j + 1)
+
     train_loss = np.array(train_loss)
     valid_loss = np.array(valid_loss)
 
@@ -175,7 +182,9 @@ if __name__ == '__main__':
     modelpath = path.join(dirname,'rv_model_multi_{}_{}_bcs.mdl'.format(j,n_epochs))
     torch.save(model.state_dict(), modelpath)
 
+    chname = path.join(dirname, 'loss_multi_ch_bcs')
     tlname = path.join(dirname, 'loss_multi_tl_bcs')
     vlname = path.join(dirname, 'loss_multi_vl_bcs')
+    np.save(chname,chunkloss)
     np.save(tlname,train_loss)
     np.save(vlname,valid_loss)
