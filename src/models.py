@@ -159,7 +159,7 @@ def load_sets(dirqueue,sitename='La Silla Observatory',objname='51PEG'):
             bcs_stack = np.append(bcs_stack, bcs_temp,axis=0)
             tim_stack = np.append(tim_stack, load(timname),axis=0)
 
-            if len(bcs_stack) > 0:
+            if len(bcs_temp) > 0:
                 ind_stack = np.append(ind_stack, iterations*np.ones(bcs_temp.shape,dtype=int))
                 iterations += 1
 
